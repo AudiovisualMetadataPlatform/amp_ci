@@ -1,0 +1,25 @@
+host: 0.0.0.0
+port: 8196
+workers: 5
+baseurl: https://github.com/AudiovisualMetadataPlatform
+
+scripts:
+  '*':
+    - build_packages
+    - distribute_to_liger
+
+temproot: /srv/scratch
+
+repos:
+  - amppd
+  - amppd-ui
+  - amp_mediaprobe
+  - amp_mgms
+  - amp_python
+  - amp_tomcat
+  - galaxy
+  - mgm-evaluation-scripts
+  - whisper
+    
+  
+
