@@ -4,9 +4,13 @@ workers: 5
 baseurl: https://github.com/AudiovisualMetadataPlatform
 
 scripts:
-  '*':
+  'refs/head/master':
     - build_packages
     - distribute_to_liger
+  'refs/head/main':
+    - build_packages
+    - distribute_to_liger
+
 
 temproot: /srv/scratch
 
