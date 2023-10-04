@@ -1,5 +1,7 @@
 *.log
 nohup.out
+*.pid 
+environment.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
