@@ -22,7 +22,7 @@ GITURL = "https://github.com/AudiovisualMetadataPlatform/"
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", default=False, action="store_true", help="Turn on debugging")
-    parser.add_argument("--threads", nargs=1, type=int, default=1, help="Number of Threads for building")
+    parser.add_argument("--threads", type=int, default=1, help="Number of Threads for building")
     args = parser.parse_args()
 
     logging.basicConfig(format="%(asctime)s [%(levelname)-8s] (%(filename)s:%(lineno)d:%(process)d)  %(message)s",
