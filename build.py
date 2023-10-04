@@ -12,7 +12,7 @@ from concurrent.futures import ProcessPoolExecutor, Future
 import tempfile
 import smtplib
 from email.message import EmailMessage
-
+import time
 
 QUEUE_DIR = Path(sys.path[0], "queue")
 LOCKFILE = QUEUE_DIR / "lock"
@@ -71,7 +71,7 @@ def main():
         # if there are no futures in flight, we can exit.
         if not futures:
             break
-
+        time.sleep(10)
 
 def lock_entry(filename: Path) -> Path:
     "Lock a queue file by renaming it to *.lock"
