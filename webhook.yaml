@@ -1,0 +1,18 @@
+---
+- id: amp_main
+  execute-command: '{{ getenv "SCRIPT_DIR" }}/queue_build.py'
+  pass-arguments-to-command:
+    - source: payload
+      name: repository.name
+    - source: payload
+      name: ref
+    - source: payload
+      name: head_commit.id
+    - source: payload
+      name: pusher.name
+    - source: payload
+      name: pusher.email
+  trigger-rule:
+    and:
+      - match: {type: payload-hmac-sha1, secret: '{{ getenv "SECRET" }}',
+                parameter: {source: header, name: X-Hub-Signature}}

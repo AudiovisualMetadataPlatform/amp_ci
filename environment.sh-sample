@@ -3,10 +3,8 @@
 # start_webhook.sh when starting the webhook binary.  Make sure to export
 # the variables so they're visible to other processes.
 #
-# They will also be available to the hook scripts
 
 # webhook secret
 export SECRET="Your secret"
 
-# temporary directory
-export TMPDIR=/srv/scratch
+
