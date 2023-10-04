@@ -1,50 +1,47 @@
 # amp_ci
 Github webhooks server for continuous integration
 
-NOTE: This is used internally by IU Libraries to build the AMP packages on repository changes.
-The daemon is running on capybara
+Based on adnanh/webhook on github
 
-As with all of our services it is managed via iul_service and is being monitored by nagios.
+The webhook binary is from release 2.8.1
 
-## How it works
-The AudiovisualMetadataPlatform account has been configured to send webhook push requests to our servers
-when a repository has been modified.  These settings can be seen at 
-https://github.com/organizations/AudiovisualMetadataPlatform/settings/hooks
+## Theory of operation.
 
-When a push request comes in, it is compared to the list of repos in amp.yaml and if it matches, the
-amp_bootstrap and the requested repo are checked out to a temporary directory.  The branch information
-is compared in the scripts section of amp.yaml and if it doesn't match, the scripts listed in '*' will
-be used (This has not been tested extensively).  The scripts are called in order which does the build
-and package distribution.  If there are any failures in the scripts the process stops.
+The webhook daemon listens to requests from github and will queue those requests
+in the `queue` directory.   Periodically, the `build.py` script will scan the
+queue and build those requests in the order they were made, possibly running
+multiple builds concurrently.
 
-Logging is done in the installation's logs directory -- a log for each repository build and one for
-the listener itself.
+If the build fails the user that made the commit will receive an email with
+the details.
 
-On successful builds the logging is minimal:
+All builds will include the `checkout_repos` and `build_packages` scripts. 
+If the branch name matches a `distribute_*` script, it will also be used.
+For sanity, the branch `master` is renamed `main` for the purpose of finding
+the distribute script.
+
+
+## Configuration
+Copy the `environment.sh-sample` file to `environment.sh` and modify the
+value for `SECRET` to match the value used by the hook.
+
+By default webhook will listen on `http://0.0.0.0:8196/webhook/{id}`  you will
+need to mdify the start_webhook.sh script if your configuration differs.
+
+The webhook server is started by running the `start_webhook.sh` script.  It can
+be stopped with `stop_webhook.sh`.  
+
+The default configuration has a single hood configured:  amp_main.  This hook
+will run the queue_build.py script which will put the build request into a queue.
+
+The queue is serviced by `build.py` which should be placed into the appropriate
+user's crontab thusly:
 ```
-2023-09-12 19:13:05,359 [webhook_listener:webhook_listener.py:125] [INFO] [2541932] Building amppd, refs/heads/AMP-2926_acJob
-2023-09-12 19:13:21,568 [webhook_listener:webhook_listener.py:156] [INFO] [2541932] Done building amppd, refs/heads/AMP-2926_acJob in 16.208548545837402 seconds
+* * * * * /path/to/build.py --threads <however many concurrent builds>
 ```
 
-If the build fails for some reason the entirety of the script's stderr and stdout are included in the log.
+Each repository that is to be build should have a webhook which calls this
+server using the id `amp_main`, a content type of application/json, and a 
+secret matching the one set in environment.sh.
 
-Upon successful completion the packages should be copied to the test instance where they will be picked
-up by drax and updated on that instance (if it is enabled).  When drax does the installation the amp team
-is notified by email.
-
-### amp_bootstrap is a special case
-Since all of repositories have a soft dependency on amp_bootstrap, if a push request is received, all of the
-known repositories are checked out and built.
-
-## Troubleshooting
-If a build fails for some reason, there are three ways to rebuild the package(s):
-* Fix the problem and commit it to the repository.
-* Go to the webhook configuration on github and redeliver the push appropriate push request
-* Log into capybara and run the trigger_build script.
-
-The last option is the best option when there was a transient error.
-* Log into capybara, become the amp user, and change directory to the amp_ci installation dir
-* `pipenv run trigger_build.py amp.yaml reponame`  (where reponame is the repository you want to rebuild)
-
-a pointless change to trigger a message!
-
+After that it should Just Work(tm)

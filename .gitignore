@@ -1,5 +1,9 @@
 *.log
 nohup.out
+*.pid 
+environment.sh
+queue/build-*
+queue/lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

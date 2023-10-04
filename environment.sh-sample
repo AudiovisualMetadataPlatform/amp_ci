@@ -1,0 +1,10 @@
+# Set up environment variables for the hook templates.  
+# The non-sample version of this file (environment.sh) is included by 
+# start_webhook.sh when starting the webhook binary.  Make sure to export
+# the variables so they're visible to other processes.
+#
+
+# webhook secret
+export SECRET="Your secret"
+
+
