@@ -47,7 +47,7 @@ def main():
             if f.done():
                 try:
                     r = f.result()
-                    logging.debug(f"Queue id {i} finished ({r})")
+                    logging.info(f"Queue id {i} finished ({r})")
                 except Exception as e:
                     logging.exception(f"Queue id {i} failed with an exception: {e}")
                 # clear out this future.
@@ -125,7 +125,7 @@ def build(data: dict):
         # * build_packages
         # * distribute_{ref-name} (if it exists)
         # The ref name for master is converted to main.
-        chunks = ("checkout_repos", "build_packages")
+        chunks = ["checkout_repos", "build_packages"]
         ref_name = data['ref'].split('/')[-1]
         if ref_name == 'master':
             ref_name = 'main'
@@ -148,7 +148,7 @@ def build(data: dict):
 
         logging.debug(f"Build script for {data}:\n{Path('build.sh').read_text()}")
 
-        logging.info(f"Staring build for {data}")
+        logging.info(f"Starting build for {data}")
         p = subprocess.run(['./build.sh'],
                            stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT,
