@@ -4,7 +4,7 @@ git clone https://github.com/AudiovisualMetadataPlatform/amp_bootstrap.git
 mkdir src_repos
 pushd src_repos
     # clone the repository
-    git clone https://github.com/AudiovisualMetadataPlatform/{repository}.git
+    git clone --recursive https://github.com/AudiovisualMetadataPlatform/{repository}.git
     # jump to this particular commit
     pushd {repository}
         git checkout {commit_id}
