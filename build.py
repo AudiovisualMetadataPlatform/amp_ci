@@ -117,7 +117,7 @@ def build(data: dict):
         tmpdir = "/srv/scratch"
     else:
         tmpdir = "/tmp"
-    with tempfile.TemporaryDirectory(dir=tmpdir) as tmpdir:
+    with tempfile.TemporaryDirectory(prefix="amp_ci-", dir=tmpdir) as tmpdir:
         os.chdir(tmpdir)
 
         # create the build script.  It consists of:
