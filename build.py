@@ -1,4 +1,4 @@
-#!/bin/env python3.9
+#!/srv/shared/bin/python3.9
 
 import argparse
 import logging
