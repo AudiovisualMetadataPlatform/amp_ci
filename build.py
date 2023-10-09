@@ -156,6 +156,7 @@ def build(data: dict):
         logging.debug(f"Build rc {p.returncode}, output: {p.stdout}")
         if p.returncode != 0:
             logging.error(f"Build failed for {data}")
+            logging.error(f"Build output:\n{p.stdout}")
             # send an email to the person who committed this.
             msg = EmailMessage()
             msg['Subject'] = f"AMP build failed for {data['repository']}/{data['commit_id']}"
