@@ -125,14 +125,20 @@ def build(data: dict):
         # * build_packages
         # * distribute_{ref-name} (if it exists)
         # The ref name for master is converted to main.
-        chunks = ["checkout_repos", "build_packages"]
+        potential_chunks = ["checkout_repos", "build_packages", "distribute"]
         ref_name = data['ref'].split('/')[-1]
         if ref_name == 'master':
             ref_name = 'main'
-        dist_script = f"distribute_{ref_name}"
-        if Path(sys.path[0], "scripts", dist_script).exists():
-            chunks.append(dist_script)
+        chunks = []
+        for p in potential_chunks:
+            d_script = f"{p}_{ref_name}"
+            if Path(sys.path[0], "scripts", d_script).exists():
+                chunks.append(d_script)
 
+        if not chunks:
+            # we found nothing, don't do anything
+            return data
+        
         # create the build script
         with open("build.sh", "w") as f:
             f.write("#!/bin/bash\n")
