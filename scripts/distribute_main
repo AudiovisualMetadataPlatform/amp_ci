@@ -1,2 +1,2 @@
-#scp packages/*.tar app_amp@liger.dlib.indiana.edu:/srv/services/amp_sys-test-8120/packages
-cp -av packages/*.tar /srv/scratch/packages
+scp packages/*.tar app_amp@liger.dlib.indiana.edu:/srv/services/amp_sys-test-8120/packages
+#cp -av packages/*.tar /srv/scratch/packages
